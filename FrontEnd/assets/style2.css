@@ -42,6 +42,11 @@ nav ul b {
 	height: 38px;
 }
 
+#error {
+	color: red;
+	font-size: 2em;
+	margin-top: 20px;
+}
 
 footer {
   position: fixed;
