@@ -24,3 +24,28 @@ button[3].addEventListener("click", () => {
   let hotels = sortWorks(works, 3)
   displayWorks(hotels, 3)
 })
+
+
+if (window.localStorage.getItem("token")) {
+  document.getElementById("login-btn").innerHTML = "logout"
+  document.getElementById("edit-mode").innerHTML += `
+    <i class="fa-regular fa-pen-to-square"></i>
+    Mode édition
+  ` 
+  document.getElementById("portfolio--title").innerHTML += `
+  <div class="edit modal-trigger">
+    <i class="fa-regular fa-pen-to-square"></i>
+    modifier
+  </div>
+  `
+  document.querySelector(".filters").innerHTML = ""
+}
+
+const modalContainer = document.querySelector(".modal-container")
+const modalTriggers = document.querySelectorAll(".modal-trigger")
+
+modalTriggers.forEach(trigger => trigger.addEventListener("click", togglemodal))
+
+function togglemodal(){
+  modalContainer.classList.toggle("active")
+}
