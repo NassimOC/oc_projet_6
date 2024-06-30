@@ -2,7 +2,7 @@ function getWorks(works) {
   const gallery = document.querySelector(".gallery")
   for (let i = 0; i < works.length; i++) {
     gallery.innerHTML += `
-        <figure>
+        <figure class="work--${works[i].id}">
           <img src="${works[i].imageUrl}" alt="${works[i].title}">
           <figcaption>${works[i].title}</figcaption>
         </figure>

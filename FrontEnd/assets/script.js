@@ -32,6 +32,7 @@ if (window.localStorage.getItem("token")) {
     <i class="fa-regular fa-pen-to-square"></i>
     Mode édition
   ` 
+  document.getElementById("edit-mode").classList.toggle("active")
   document.getElementById("portfolio--title").innerHTML += `
   <div class="edit modal-trigger">
     <i class="fa-regular fa-pen-to-square"></i>
@@ -39,13 +40,44 @@ if (window.localStorage.getItem("token")) {
   </div>
   `
   document.querySelector(".filters").innerHTML = ""
+  const modalPreview = document.querySelector(".modal-preview")
+  for (let i = 0; i < works.length; i++) {
+    modalPreview.innerHTML += `
+        <figure class="work--${works[i].id}">
+          <img src="${works[i].imageUrl}" alt="${works[i].title}">
+          <i class="fa-solid fa-trash-can" data-id=${works[i].id}></i>
+        </figure>
+      `
+  }
 }
 
 const modalContainer = document.querySelector(".modal-container")
 const modalTriggers = document.querySelectorAll(".modal-trigger")
 
-modalTriggers.forEach(trigger => trigger.addEventListener("click", togglemodal))
-
-function togglemodal(){
+modalTriggers.forEach(trigger => trigger.addEventListener("click", () => {
   modalContainer.classList.toggle("active")
-}
+}))
+
+const removeWork = document.querySelectorAll(".fa-trash-can")
+
+removeWork.forEach(icon => icon.addEventListener("click", (event) => {
+  event.preventDefault();
+  const id = icon.getAttribute("data-id")
+  
+  if (window.localStorage.getItem("token")) {
+    fetch(`http://localhost:5678/api/works/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${window.localStorage.getItem("token")}`,
+        "Content-Type": "application/json"
+        }
+   }).then(async function(response) {
+    if (response.ok) {
+      const workRemoved = document.querySelectorAll(`.work--${id}`)
+      workRemoved.forEach(work => {
+        work.remove()
+      })
+    }
+   })
+  }
+}))

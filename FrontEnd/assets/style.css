@@ -217,9 +217,12 @@ footer nav ul {
 	height: 59px;
 	width: 100%;
 	color: white;
-	display: flex;
 	justify-content: center;
 	align-items: center;
+	display: none;
+}
+#edit-mode.active {
+	display: flex;
 }
 
 .edit {
@@ -276,6 +279,39 @@ footer nav ul {
 	width: fit-content;
 }
 
+.modal-preview {
+	width: 70%;
+	margin: auto;
+	margin-top: 55px;
+	margin-bottom: 55px;
+	display: grid;
+	place-items: center;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	grid-column-gap: 4px;
+	grid-row-gap: 24px;
+}
+
+.modal-preview img {
+	width: 76px;
+	height: 102px;
+}
+
+.modal-preview figure {
+	position: relative;
+}
+
+.modal-preview .fa-trash-can {
+	padding: 5px;
+	background-color: black;
+	border-radius: 2px;
+	font-size: 11px;
+	color: white;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	cursor: pointer;
+}
+
 .modal-close {
 	padding: 10px;
 	font-size: 18px;
@@ -288,11 +324,9 @@ footer nav ul {
 
 .modal-line {
 	margin: auto;
-	width: 80%;
+	width: 70%;
 	height: 1px;
 	background: #B3B3B3;
-	margin-top: 20px;
-	margin-bottom: 20px;
 }
 
 .modal-btn {
@@ -301,4 +335,5 @@ footer nav ul {
 	width: 237px;
 	height: 36px;
 	margin: auto;
+	margin-top: 30px;
 }
