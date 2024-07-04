@@ -151,9 +151,7 @@ form.addEventListener("submit", (event) => {
 })
 form.addEventListener("formdata", (event) => {
   const data = event.formData;
-  for (const value of data.values()) {
-    console.log(value);
-  }
+
   fetch("http://localhost:5678/api/works", {
     method: "POST",
     headers: {
@@ -163,8 +161,10 @@ form.addEventListener("formdata", (event) => {
   }).then( async function(response) {
     if (response.ok) {
       console.log(response.status)
-      getWorks(works)
-      getModalworks(works)
+      const newWorks = await fetch("http://localhost:5678/api/works").then(works => works.json())
+      getWorks(newWorks)
+      getModalworks(newWorks)
+      modalEdit2.classList.toggle("active")
     } else {
       console.log(response.status)
       document.querySelector(".error-message").style.display = "block"
