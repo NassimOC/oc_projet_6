@@ -47,7 +47,7 @@ if (window.localStorage.getItem("token")) {
   
   for (let i = 0; i < categories.length; i++) {
     categoryList.innerHTML += `
-      <option value="${categories[i].name}">${categories[i].name}</option>
+      <option value="${categories[i].id}">${categories[i].name}</option>
     `
   }
 }
@@ -83,8 +83,6 @@ removeWork.forEach(icon => icon.addEventListener("click", (event) => {
       workRemoved.forEach(work => {
         work.remove()
       })
-    } else {
-      console.log(response)
     }
    })
   }
@@ -131,7 +129,7 @@ formFile.addEventListener('change', event => {
     }
 
     reader.readAsDataURL(file)
-  
+
     modalTriggers.forEach(trigger => trigger.addEventListener("click", () => {
       section.style.display = "flex"
       image.style.display = "none"
@@ -144,33 +142,32 @@ modalTriggers.forEach(trigger => trigger.addEventListener("click", () => {
   formTitle.value =""
   formCategory.value =""
   validateForm(formTitle,formCategory, formFile)
-  document.querySelector(".error-message").style.display = "block"
+  document.querySelector(".error-message").style.display = "none"
 }))
 
 form.addEventListener("submit", (event) => {
-  const filledForm = document.getElementById("upload-form")
-  event.preventDefault()
-  const formData = new FormData(filledForm)
-
-  for (const value of formData.values()) {
-    console.log(value)
+  event.preventDefault();
+  new FormData(form)
+})
+form.addEventListener("formdata", (event) => {
+  const data = event.formData;
+  for (const value of data.values()) {
+    console.log(value);
   }
-
   fetch("http://localhost:5678/api/works", {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${window.localStorage.getItem("token")}`
       },
-    body: formData
+    body: data
   }).then( async function(response) {
     if (response.ok) {
-      console.log("Ok!")
+      console.log(response.status)
       getWorks(works)
       getModalworks(works)
-
     } else {
-      document.querySelector(".error-message").style.display = "block"
       console.log(response.status)
+      document.querySelector(".error-message").style.display = "block"
     }
-   })
+  })
 })
