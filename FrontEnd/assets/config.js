@@ -1,5 +1,6 @@
 function getWorks(works) {
   const gallery = document.querySelector(".gallery")
+  gallery.innerHTML = ""
   for (let i = 0; i < works.length; i++) {
     gallery.innerHTML += `
         <figure class="work--${works[i].id}">
@@ -63,7 +64,7 @@ function validateForm(formTitle, formCategory, formFile) {
 
 function getModalworks(works) {
   const modalPreview = document.querySelector(".modal-preview")
-
+  modalPreview.innerHTML = ""
       for (let i = 0; i < works.length; i++) {
       modalPreview.innerHTML += `
         <figure class="work--${works[i].id}">
