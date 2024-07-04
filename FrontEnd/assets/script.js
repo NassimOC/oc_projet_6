@@ -40,22 +40,28 @@ if (window.localStorage.getItem("token")) {
   </div>
   `
   document.querySelector(".filters").innerHTML = ""
-  const modalPreview = document.querySelector(".modal-preview")
-  for (let i = 0; i < works.length; i++) {
-    modalPreview.innerHTML += `
-        <figure class="work--${works[i].id}">
-          <img src="${works[i].imageUrl}" alt="${works[i].title}">
-          <i class="fa-solid fa-trash-can" data-id=${works[i].id}></i>
-        </figure>
-      `
+
+  getModalworks(works)
+
+  const categoryList = document.getElementById("category")
+  
+  for (let i = 0; i < categories.length; i++) {
+    categoryList.innerHTML += `
+      <option value="${categories[i].name}">${categories[i].name}</option>
+    `
   }
 }
 
-const modalContainer = document.querySelector(".modal-container")
+const modalEdit1 = document.querySelector(".modal-container")
+const modalEdit2 = document.querySelector(".modal-container--2")
 const modalTriggers = document.querySelectorAll(".modal-trigger")
 
 modalTriggers.forEach(trigger => trigger.addEventListener("click", () => {
-  modalContainer.classList.toggle("active")
+  if (!modalEdit1.classList.contains("active") && modalEdit2.classList.contains("active") ) {
+    modalEdit2.classList.toggle("active")
+  } else {
+    modalEdit1.classList.toggle("active")
+  }
 }))
 
 const removeWork = document.querySelectorAll(".fa-trash-can")
@@ -77,7 +83,94 @@ removeWork.forEach(icon => icon.addEventListener("click", (event) => {
       workRemoved.forEach(work => {
         work.remove()
       })
+    } else {
+      console.log(response)
     }
    })
   }
 }))
+
+const modalBtn = document.querySelector(".modal-btn")
+const modalBack = document.querySelector(".modal-back")
+
+modalBtn.addEventListener("click", () => {
+  modalEdit1.classList.toggle("active")
+  modalEdit2.classList.toggle("active")
+})
+modalBack.addEventListener("click",() => {
+  modalEdit1.classList.toggle("active")
+  modalEdit2.classList.toggle("active")
+})
+
+const form = document.getElementById("upload-form")
+const formFile = document.getElementById("image")
+const formTitle = document.getElementById("title")
+const formCategory = document.getElementById("category")
+
+formTitle.addEventListener("input", ()=> {
+  validateForm(formTitle,formCategory, formFile)
+})
+formCategory.addEventListener("input",() => {
+  validateForm(formTitle,formCategory,formFile)
+})
+formFile.addEventListener("input", () => {
+  validateForm(formTitle,formCategory,formFile)
+})
+
+formFile.addEventListener('change', event => {
+  const file = event.target.files[0]
+  const section = document.querySelector(".upload-info")
+  const image = document.getElementById("previewImg")
+  
+  if (file) {
+    section.style.display = "none"
+    image.style.display = "block"
+    const reader = new FileReader();
+    reader.onload = e => {
+      image.src = e.target.result
+    }
+
+    reader.readAsDataURL(file)
+  
+    modalTriggers.forEach(trigger => trigger.addEventListener("click", () => {
+      section.style.display = "flex"
+      image.style.display = "none"
+    }))
+  }
+})
+
+modalTriggers.forEach(trigger => trigger.addEventListener("click", () => {
+  formFile.value = ""
+  formTitle.value =""
+  formCategory.value =""
+  validateForm(formTitle,formCategory, formFile)
+  document.querySelector(".error-message").style.display = "block"
+}))
+
+form.addEventListener("submit", (event) => {
+  const filledForm = document.getElementById("upload-form")
+  event.preventDefault()
+  const formData = new FormData(filledForm)
+
+  for (const value of formData.values()) {
+    console.log(value)
+  }
+
+  fetch("http://localhost:5678/api/works", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${window.localStorage.getItem("token")}`
+      },
+    body: formData
+  }).then( async function(response) {
+    if (response.ok) {
+      console.log("Ok!")
+      getWorks(works)
+      getModalworks(works)
+
+    } else {
+      document.querySelector(".error-message").style.display = "block"
+      console.log(response.status)
+    }
+   })
+})

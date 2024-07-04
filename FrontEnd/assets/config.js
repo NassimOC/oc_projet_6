@@ -51,3 +51,25 @@ function displayWorks(set, btnNumber) {
   gallery.innerHTML = ""
   getWorks(set)
 }
+
+function validateForm(formTitle, formCategory, formFile) {
+  const submitBtn = document.querySelector(".modal-btn--2")
+  if (formTitle.value !== "" && formCategory.value !== "" && formFile.files.length > 0) {
+    submitBtn.disabled = false
+  } else { 
+    submitBtn.disabled = true
+  }
+}
+
+function getModalworks(works) {
+  const modalPreview = document.querySelector(".modal-preview")
+
+      for (let i = 0; i < works.length; i++) {
+      modalPreview.innerHTML += `
+        <figure class="work--${works[i].id}">
+          <img src="${works[i].imageUrl}" alt="${works[i].title}">
+          <i class="fa-solid fa-trash-can" data-id=${works[i].id}></i>
+        </figure>
+      `
+      }
+}
